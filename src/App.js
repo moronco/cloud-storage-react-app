@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { auth } from './firebase';
+import FileUpload from './FileUpload'; // Ensure this is correct
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import './App.css';
 
@@ -32,8 +33,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Firebase Auth Demo</h1>
-        
+        <h1>Cloud storage platform</h1>
+
         {!isUserLoggedIn ? (
           <>
             <input
@@ -52,7 +53,11 @@ function App() {
             <button onClick={handleLogin}>Log In</button>
           </>
         ) : (
-          <p>Welcome, you're logged in!</p>
+          <>
+            <p>Welcome, you're logged in!</p>
+            {/* File upload component */}
+            <FileUpload />
+          </>
         )}
       </header>
     </div>
