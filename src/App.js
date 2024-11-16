@@ -1,22 +1,59 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { auth } from './firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import './App.css';
 
 function App() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  // Handle user signup
+  const handleSignup = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert('User signed up successfully!');
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  // Handle user login
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setIsUserLoggedIn(true);
+      alert('User logged in successfully!');
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Firebase Auth Demo</h1>
+        
+        {!isUserLoggedIn ? (
+          <>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button onClick={handleSignup}>Sign Up</button>
+            <button onClick={handleLogin}>Log In</button>
+          </>
+        ) : (
+          <p>Welcome, you're logged in!</p>
+        )}
       </header>
     </div>
   );
