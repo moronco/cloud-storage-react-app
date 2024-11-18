@@ -1,7 +1,8 @@
-const express =require('express');
+const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = 5000;
@@ -10,10 +11,16 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'uploads')));
 
+// Ensure the uploads directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {s
+  fs.mkdirSync(uploadDir);
+}
+
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Make sure this folder exists
+    cb(null, 'uploads/'); // Ensure this folder exists
   },
   filename: (req, file, cb) => {
     console.log(`Uploading file: ${file.originalname}`);
@@ -33,6 +40,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   console.log('File uploaded successfully:', req.file);
   res.json({ message: 'File uploaded successfully', file: req.file });
 });
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error handling middleware:', err);
@@ -41,5 +49,5 @@ app.use((err, req, res, next) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://40.86.181.37:${PORT}`);
 });

@@ -5,36 +5,41 @@ const FileUpload = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+    setSuccess(null);
+    setError(null);
     console.log('Selected file:', selectedFile);
   };
 
   const handleUpload = async () => {
     if (!file) {
-      setError("Please select a file to upload.");
+      setError('Please select a file to upload.');
       console.log('No file selected');
       return;
     }
 
     setUploading(true);
     setError(null);
+    setSuccess(null);
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
     try {
       console.log('Uploading file to server...');
-      const response = await axios.post("http:// 192.168.1.130/upload", formData, {
+      const response = await axios.post('http://40.86.181.37:5000/upload', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
+
       setUploading(false);
+      setSuccess('File uploaded successfully!');
       console.log('Server response:', response.data);
-      console.log(response.data);
     } catch (err) {
       setUploading(false);
       setError('Error uploading file.');
@@ -46,9 +51,10 @@ const FileUpload = () => {
     <div>
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload} disabled={uploading}>
-        {uploading ? "Uploading..." : "Upload"}
+        {uploading ? 'Uploading...' : 'Upload'}
       </button>
-      {error && <div style={{ color: "red" }}>{error}</div>}
+      {success && <div style={{ color: 'green' }}>{success}</div>}
+      {error && <div style={{ color: 'red' }}>{error}</div>}
     </div>
   );
 };
